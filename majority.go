@@ -71,8 +71,8 @@ func (s StreamHeap) Less(i, j int) bool {
 	return s[i].Count < s[j].Count
 }
 
-func (s StreamHeap) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
+func (s *StreamHeap) Swap(i, j int) {
+	(*s)[i], (*s)[j] = (*s)[j], (*s)[i]
 }
 
 func (s *StreamHeap) Push(item interface{}) {
