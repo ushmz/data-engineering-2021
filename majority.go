@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/heap"
 	"errors"
 	"fmt"
 )
@@ -52,7 +53,62 @@ func lossyCounting(stream []interface{}, k int) (interface{}, error) {
 				}
 			}
 		}
-		fmt.Println("Index:", i, "\t: ", t)
+		fmt.Println("Time Stamp:", i, "\t: ", t)
+	}
+	return t, nil
+}
+
+type Counter struct {
+	Item  interface{}
+	Count int
+}
+
+type StreamHeap []Counter
+
+func (s StreamHeap) Len() int { return len(s) }
+
+func (s StreamHeap) Less(i, j int) bool {
+	return s[i].Count < s[j].Count
+}
+
+func (s StreamHeap) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func (s *StreamHeap) Push(item interface{}) {
+	*s = append(*s, item.(Counter))
+}
+
+func (s *StreamHeap) Pop() interface{} {
+	old := *s
+	n := len(old)
+	item := old[n-1]
+	*s = old[0 : n-1]
+	return item
+}
+
+func spaceSaving(stream []interface{}, k int) (interface{}, error) {
+	t := &StreamHeap{}
+	heap.Init(t)
+
+	for i, v := range stream {
+		found := false
+		for idx, val := range *t {
+			if val.Item == v {
+				found = true
+				(*t)[idx] = Counter{Item: val.Item, Count: val.Count + 1}
+			}
+		}
+
+		if !found {
+			if t.Len() < k {
+				heap.Push(t, Counter{Item: v, Count: 1})
+			} else {
+				min := heap.Pop(t).(Counter)
+				heap.Push(t, Counter{Item: v, Count: min.Count + 1})
+			}
+		}
+		fmt.Println("Time Stamp:", i, "\t: ", t)
 	}
 	return t, nil
 }
@@ -77,4 +133,11 @@ func main() {
 	}
 
 	// Space algorithm
+	fmt.Println("SpaceSaving Algorythm")
+	m, err = spaceSaving(S, 4)
+	if err != nil {
+		fmt.Println("Majority:", err)
+	} else {
+		fmt.Println("Majority:", m)
+	}
 }
