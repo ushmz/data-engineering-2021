@@ -6,9 +6,7 @@ import (
 	"fmt"
 )
 
-var S = []interface{}{"a", "b", "a", "c", "b", "d", "e", "a", "g", "f", "b", "f", "f", "a", "c", "f", "a", "f"}
-
-func majorityCount(stream []interface{}) (interface{}, error) {
+func MajorityCount(stream []interface{}) (interface{}, error) {
 	var majority interface{}
 	counter := 0
 
@@ -34,7 +32,7 @@ func majorityCount(stream []interface{}) (interface{}, error) {
 	return majority, nil
 }
 
-func lossyCounting(stream []interface{}, k int) (interface{}, error) {
+func LossyCounting(stream []interface{}, k int) (interface{}, error) {
 	delta := 0
 	t := map[interface{}]int{}
 
@@ -87,7 +85,7 @@ func (s *StreamHeap) Pop() interface{} {
 	return item
 }
 
-func spaceSaving(stream []interface{}, k int) (interface{}, error) {
+func SpaceSaving(stream []interface{}, k int) (interface{}, error) {
 	t := &StreamHeap{}
 	heap.Init(t)
 
@@ -111,33 +109,4 @@ func spaceSaving(stream []interface{}, k int) (interface{}, error) {
 		fmt.Println("Time Stamp:", i, "\t: ", t)
 	}
 	return t, nil
-}
-
-func main() {
-	// Majority algorithm
-	fmt.Println("Majority Algorythm")
-	m, err := majorityCount(S)
-	if err != nil {
-		fmt.Println("Majority:", err)
-	} else {
-		fmt.Println("Majority:", m)
-	}
-
-	// Lossy algorithm
-	fmt.Println("Lossy Algorythm")
-	m, err = lossyCounting(S, 4)
-	if err != nil {
-		fmt.Println("Majority:", err)
-	} else {
-		fmt.Println("Majority:", m)
-	}
-
-	// Space algorithm
-	fmt.Println("SpaceSaving Algorythm")
-	m, err = spaceSaving(S, 4)
-	if err != nil {
-		fmt.Println("Majority:", err)
-	} else {
-		fmt.Println("Majority:", m)
-	}
 }
