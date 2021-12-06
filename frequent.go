@@ -32,6 +32,30 @@ func MajorityCount(stream []interface{}) (interface{}, error) {
 	return majority, nil
 }
 
+func Frequent(stream []interface{}, k int) (interface{}, error) {
+	t := map[interface{}]int{}
+
+	for i, v := range stream {
+		if (i+1)%k == 0 {
+			for key, value := range t {
+				if value == 1 {
+					delete(t, key)
+				}
+			}
+		}
+
+		if val, ok := t[v]; ok {
+			t[v] = val + 1
+		} else {
+			t[v] = 1
+		}
+
+		fmt.Println("Time Stamp:", i, "\t: ", t)
+	}
+
+	return t, nil
+}
+
 func LossyCounting(stream []interface{}, k int) (interface{}, error) {
 	delta := 0
 	t := map[interface{}]int{}
